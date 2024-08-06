@@ -1,0 +1,138 @@
+Editor de Texto
+O principal editor de texto para Linux e UNIX é um programa chamado vi. Embora existam inúmeros editores disponíveis para Linux que vão desde o pequeno editor nano até o enorme editor emacs, existem várias vantagens para o editor vi:
+
+O editor vi está disponível em todas as distribuições Linux do mundo. Isto não é verdade para qualquer outro editor.
+
+O editor vi pode ser executado tanto em uma CLI (interface de linha de comando) quanto em uma GUI (interface gráfica do usuário).
+
+Embora novos recursos tenham sido adicionados ao editor vi, as funções principais já existem há décadas. Isso significa que se alguém aprendeu o editor vi na década de 1970, eles poderiam usar uma versão moderna sem qualquer problema. Embora pareça trivial, pode não parecer tão trivial daqui a 20 anos.
+
+Considere o seguinte
+
+A maneira correta de pronunciar o editor vi é o editor vee-eye. As letras vi representam visual, mas nunca foi pronunciado desta forma pelos desenvolvedores, mas sim a letra v seguida da letra i.
+
+Na realidade, a maioria dos sistemas Linux não inclui o vi original, mas uma versão melhorada do mesmo conhecido como vim, para vi melhorado. Este fato pode estar oculto pela maioria das distribuições Linux. Na maioria das vezes, o vim funciona como vi, mas tem recursos adicionais. Para os tópicos que serão abordados neste curso, tanto vi como vim funcionarão.
+
+Para começar a usar vi, basta digitar o comando seguido do nome do caminho para o arquivo para editar ou criar:
+
+sysadmin@localhost:~$ vi newfile.txt
+Existem três modos usados no vi: modo de comando, modo de inserção e modo ex.
+
+Movimento do modo de comando
+Inicialmente, o programa é iniciado no modo de comando. Modo de comando é usado para digitar comandos, como aqueles usados para se mover em torno de um documento, manipular texto e acessar os outros dois modos. Para retornar ao modo de comando a qualquer momento, pressione a tecla Esc.
+
+Uma vez que algum texto foi adicionado a um documento, para executar ações como mover o cursor, a tecla Esc precisa ser pressionada primeiro para retornar ao modo de comando. Isso parece muito trabalho, mas lembre-se que vi funciona em um ambiente terminal onde um mouse é inútil.
+
+Comandos de movimento em vi têm dois aspectos, um movimento e um prefixo numérico opcional, que indica quantas vezes repetir esse movimento. O formato geral é o seguinte:
+
+[contagem] movimento
+A tabela a seguir resume as teclas de movimento disponíveis:
+
+Movimento	Resultado
+h	Deixou um caractere
+j	Abaixo uma linha
+k	Acima uma linha
+l	Um caractere à direita
+w	Uma palavra para a frente
+b	Uma palavra atrás
+^	Início da linha
+$	Fim da linha
+Nota
+
+Desde a atualização para vim também é possível usar as teclas de seta ←↓↑→ em vez de hjkl respectivamente.
+
+Esses movimentos podem ser prefixados com um número para indicar quantas vezes o movimento deve ser realizado. Por exemplo, 5h moverá o cursor cinco caracteres para a esquerda e 3w moverá o cursor três palavras para a direita.
+
+Para mover o cursor para um número de linha específico, digite esse número de linha seguido do caractere G. Por exemplo, para chegar à quinta linha do arquivo tipo 5G. 1G ou gg pode ser usado para ir para a primeira linha do arquivo, enquanto um G solitário irá levá-lo para a última linha. Para descobrir em que linha o cursor está atualmente, use CTRL-G.
+
+Ações do modo de comando
+A convenção padrão para edição de conteúdo com processadores de texto é usar copiar, cortar e colar. O programa vi não tem nenhum destes. Em vez disso, vi usa os três comandos a seguir:
+
+Padrão	Vi	Significado
+cut	d	deletar
+copy	y	copiar
+paste	P | p	colar
+Os movimentos aprendidos na página anterior são usados para especificar onde a ação deve ocorrer, sempre começando com a localização atual do cursor. Qualquer um dos seguintes formatos gerais para comandos de ação é aceitável:
+
+açao [contagem] movimento
+[contagem] movimento ação
+Excluir
+Excluir remove o texto indicado da página e o guarda no buffer, sendo o buffer o equivalente à “área de transferência” usada no Windows ou Mac OSX. A tabela a seguir fornece alguns exemplos de uso comuns:
+
+Ação	Resultado
+dd	Excluir linha atual
+3dd	Excluir as próximas três linhas
+dw	Excluir a palavra atual
+d3w	Excluira as próximas três palavras
+d4h	Excluir quatro caracteres à esquerda
+Mudar
+Mudança é muito semelhante a excluir; o texto é removido e guardado no buffer, no entanto, o programa é alternado para o modo de inserção para permitir alterações imediatas no texto. A tabela a seguir fornece alguns exemplos de uso comuns:
+
+Ação	Resultado
+cc	Mudar linha atual
+cw	Mudar palavra atual
+c3w	Mudar as próximas três palavras
+c5h	Mudar cinco caracteres para a esquerda
+Arrancar (Yank)
+Yank coloca conteúdo no buffer sem excluí-lo. A tabela a seguir fornece alguns exemplos de uso comuns:
+
+Ação	Resultado
+yy	Arranque a linha atual
+3yy	Arranque as próximas três linhas
+yw	Arranque as próximas três linhas
+y$	Arranque até o fim da linha
+Colocar
+O colocar, posiciona o texto guardado no buffer antes ou depois da posição do cursor. Observe que estas são as duas únicas opções, o colocar não usa os movimentos como os comandos de ação anteriores.
+
+Ação	Resultado
+p	Colocar (colar) após o cursor
+P	Colocar antes do cursor
+Pesquisando em vi
+Outra função padrão que os processadores de texto oferecem é o encontrar. Muitas vezes, as pessoas usam CTRL-F ou observam o menu de edição. O programa vi usa a pesquisa. O pesquisar é mais eficiente do que o encontrar porque suporta padrões de texto literal e expressões regulares.
+
+Para pesquisar a partir da posição atual do cursor, use / para iniciar a pesquisa, digite um termo de pesquisa e pressione a tecla Enter para iniciar a pesquisa. O cursor se moverá para a primeira correspondência que for encontrada.
+
+Para prosseguir para a próxima correspondência usando o mesmo padrão, pressione a tecla n. Para voltar a uma partida anterior, pressione a tecla N. Se o fim ou o início do documento for atingido, a pesquisa se estenderá automaticamente para o outro lado do documento.
+
+Para começar a pesquisar para trás a partir da posição do cursor, comece esc revendo ?, depois digite o padrão para procurar correspondências e pressione a tecla Enter.
+
+Modo de inserção
+O modo de inserção é usado para adicionar texto ao documento. Há algumas maneiras de entrar no modo de inserção a partir do modo de comando, cada uma diferenciada por onde a inserção de texto começará. A tabela a seguir abrange o mais comum:
+
+Entrada	Objetivo
+a	Entrar no modo de inserção logo após o cursor
+A	Entrar no modo de inserção no final da linha
+i	Entrar no modo de inserção logo antes do cursor
+I	Entrar no modo de inserção no início da linha
+o	Entrar no modo de inserção em uma linha em branco após o cursor
+O	Entrar no modo de inserção em uma linha em branco antes do cursor
+Ex Mode
+Originalmente, o editor vi era chamado de editorex. O nome vi era a abreviação do comando visual no editor ex que mudou o editor para o modo “visual”.
+
+No modo normal original, o editor ex só permitia aos usuários ver e modificar uma linha de cada vez. No modo visual, os usuários podiam ver o máximo possível do documento que caberia na tela. Como a maioria dos usuários preferia o modo visual ao modo de edição de linha, o arquivo ex programa foi vinculado a um arquivo vi, para que os usuários pudessem iniciar ex diretamente no modo visual quando executassem o link vi.
+
+Eventualmente, o arquivo de programa real foi renomeado vi e o editor ex tornou-se um link que apontava o editor vi.
+
+Quando o modo ex do editor vi está sendo usado, é possível visualizar ou alterar configurações, bem como executar comandos relacionados a arquivos, como abrir, guardar ou interromper alterações em um arquivo. Para chegar ao modo ex, digite um caractere : no modo de comando. A tabela a seguir lista algumas ações comuns executadas no modo ex:
+
+Entrada	Objetivo
+:w	Salvar o arquivo atual no sistema de arquivos
+:w nome_do_arquivo	Salvar uma cópia do arquivo atual como nome_do_arquivo
+:w!	Forçar salvar arquivo atual
+:1	Vá para a linha número 1 ou qualquer número fornecido
+:e nome_do_arquivo	Abrir nome_do_arquivo
+:q	Sair se nenhuma alteração for feita no arquivo
+:q!	Sair sem salvar as alterações no arquivo
+Uma análise rápida da tabela acima revela que, se um ponto de exclamação, !, é adicionado a um comando, ele então tenta forçar a operação. Por exemplo, imagine que você faz alterações em um arquivo no editor vi e, em seguida, tente sair com :q, apenas para descobrir que o comando falha. O editor vi não quer sair sem salvar as alterações feitas em um arquivo, mas você pode forçá-lo a sair com o comando ex :q!.
+
+Considere o seguinte
+
+Embora o modo ex ofereça várias maneiras de salvar e sair, também há ZZ que está disponível no modo de comando; este é o equivalente a :wq. Existem muitas mais funções sobrepostas entre o modo ex e o modo de comando. Por exemplo, o modo ex pode ser usado para navegar para qualquer linha no documento, digitando : seguido do número da linha, enquanto o G pode ser usado no modo de comando como demonstrado anteriormente.
+
+Acompanhe
+
+Se você tiver um arquivo de texto aberto, saia dele executando o :q! comando. Isso será encerrado sem salvar as alterações.
+
+~
+~
+:q!_
